@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "leaflet/dist/leaflet.css";
+
+:root {
+  --primary: #064E3B; /* Forest Green */
+  --accent: #BEF264;  /* Vibrant Lime */
+  --bg-white: #ffffff;
+}
+
+body {
+  background-color: var(--bg-white); /* pure white main body */
+  color: var(--primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom modern scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F5F0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E5E5DF;
+  border-radius: 10px;
+}
+
+.glass-nav {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* Ticker / marquee helpers */
+.ticker-wrap{position:relative;overflow:hidden}
+.marquee{display:flex;gap:3rem;align-items:center}
+@keyframes marquee {
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+.marquee-animate{display:inline-flex;animation:marquee 36s linear infinite}
+
+/* small utility to visually indicate up/down */
+.tick-up{color:var(--accent)}
+.tick-down{color:#ff6b6b}

@@ -1,0 +1,1 @@
+Textures folder placeholder for Three.js materials.
