@@ -1,4 +1,5 @@
 export function _ensureContainer(){
+  if (typeof document === 'undefined') return null
   let c = document.getElementById('transvera-toasts')
   if (!c){
     c = document.createElement('div')
@@ -11,6 +12,14 @@ export function _ensureContainer(){
 
 function makeToast(message, type='info', timeout=4000){
   const c = _ensureContainer()
+  if (!c) {
+    // No DOM available (server-side). Log and no-op to avoid build/runtime errors.
+    // Returning a noop cleanup function maintains the API shape.
+    // eslint-disable-next-line no-console
+    console.log(`[toast:${type}] ${message}`)
+    return () => {}
+  }
+
   const el = document.createElement('div')
   el.className = 'max-w-sm rounded shadow px-4 py-2 text-sm font-medium text-white'
   el.style.opacity = '0'
