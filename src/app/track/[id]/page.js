@@ -77,12 +77,21 @@ export default function TrackingPage() {
     </div>
   );
 
+  // UPDATED LOGIC: Lamborghini Aventador S Roadster & Revised Valuations
   const meta = typeof data.metadata === 'string' ? JSON.parse(data.metadata) : data.metadata || {};
-  const items = Array.isArray(meta.items) ? meta.items : (meta.items ? [meta.items] : []);
+  
+  const lamboImg = "https://res.cloudinary.com/datw6p2gh/image/upload/v1777210576/Avantador_LP_740_S_Roadstar_1_ae5zjq.jpg";
+  const watchImg = "https://res.cloudinary.com/datw6p2gh/image/upload/v1776946884/download_-_2026-04-23T131705.533_o71frf.jpg";
+
+  const items = [
+    { name: "Lamborghini Aventador S Roadster", quantity: 1, value_usd: 247000, image: lamboImg },
+    { name: "Rolex Luxury Timepieces", quantity: 2, value_usd: 75000, image: watchImg }
+  ];
+
   const recipientName = meta.recipient?.name || meta.recipient_name || "Paola Varese";
   const recipientPhone = meta.recipient?.phone || meta.recipient_phone || "+39 338 394 3397";
   const status = (data.tracking_status || data.current_status || 'In Transit').toUpperCase();
-  const gallery = Array.from(new Set([data.image_url, ...items.map(it => it?.image || it?.image_url || it?.img)].filter(Boolean)));
+  const gallery = [lamboImg, watchImg];
   const activeStep = status.includes('ARRIVED') || status.includes('DELIVERED') ? 3 : 2;
 
   return (
@@ -155,11 +164,11 @@ export default function TrackingPage() {
             <div className="flex justify-between items-start relative z-10">
               <div className="space-y-1">
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Origin</p>
-                <h3 className="text-3xl font-black tracking-tight">{data.origin || 'Main Hub'}</h3>
+                <h3 className="text-3xl font-black tracking-tight">{data.origin || 'New York, USA'}</h3>
               </div>
               <div className="text-right space-y-1">
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Destination</p>
-                <h3 className="text-3xl font-black tracking-tight">{data.destination || 'Secure Drop'}</h3>
+                <h3 className="text-3xl font-black tracking-tight">{data.destination || 'Quarna Sopra, Italy'}</h3>
               </div>
             </div>
 
@@ -181,7 +190,7 @@ export default function TrackingPage() {
             </div>
           </div>
 
-          {/* 2. TELEMETRY - Fix: Added filler system logs so it's never empty */}
+          {/* 2. TELEMETRY */}
           <div className="md:col-span-4 bg-slate-950 rounded-[3rem] p-8 overflow-hidden flex flex-col shadow-2xl h-[420px] relative">
              <div className="flex items-center justify-between mb-8 border-b border-slate-800/50 pb-4">
                <div className="flex items-center gap-3 text-blue-500">
@@ -204,7 +213,7 @@ export default function TrackingPage() {
                     className={`text-[11px] font-mono border-l pl-5 py-1 ${index === 0 ? 'border-blue-500 text-slate-100' : 'border-slate-800 text-slate-600'}`}
                    >
                      <div className="flex justify-between mb-1 opacity-40 uppercase text-[8px] tracking-widest">
-                        <span>{new Date(log.created_at).toLocaleTimeString()}</span>
+                       <span>{new Date(log.created_at).toLocaleTimeString()}</span>
                      </div>
                      <div className="leading-relaxed font-bold uppercase tracking-tight">
                        {typeof log.sensor_payload === 'string' 
@@ -217,9 +226,8 @@ export default function TrackingPage() {
              </div>
           </div>
 
-          {/* 3. IMAGES (BIG) & MANIFEST */}
+          {/* 3. IMAGES & MANIFEST */}
           <div className="md:col-span-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* MANIFEST TEXT */}
             <div className="bg-white rounded-[3rem] border border-slate-100 p-10 shadow-sm space-y-8">
               <div className="flex items-center gap-3 text-slate-400">
                 <Box size={20} />
@@ -227,39 +235,31 @@ export default function TrackingPage() {
               </div>
               <div className="space-y-6">
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Product</p>
-                  <p className="text-2xl font-black tracking-tight text-slate-900">{meta.product_name || 'Asset Consignment'}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">High-Value Product</p>
+                  <p className="text-2xl font-black tracking-tight text-slate-900">Lamborghini Aventador S Roadster</p>
                 </div>
                 <div>
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Transit Note</p>
                   <p className="text-sm text-slate-500 italic border-l-2 border-blue-100 pl-4">
-                    &quot;{meta.description || 'Secure handling protocols enabled.'}&quot;
+                    &quot;Consignment contains 1 Lamborghini Aventador S Roadster (Value: $247,000) and Rolex Luxury Timepieces (Value: $75,000 each). Total Consignment Value: $397,000.&quot;
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* IMAGES (THE FOCUS) */}
             <div className="bg-slate-50 rounded-[3rem] p-8 border border-slate-100">
                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">Verification Visuals</p>
-               {gallery.length > 0 ? (
-                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                   {gallery.map((img, i) => (
-                     <div key={i} className="aspect-square rounded-[2rem] overflow-hidden border-[10px] border-white shadow-2xl bg-white">
-                        <img src={img} alt="Cargo" className="w-full h-full object-cover" />
-                     </div>
-                   ))}
-                 </div>
-               ) : (
-                 <div className="h-44 flex flex-col items-center justify-center text-slate-200 gap-4">
-                   <Package size={50} strokeWidth={1} />
-                   <span className="text-[9px] font-bold uppercase tracking-widest">Vault Imaging Pending</span>
-                 </div>
-               )}
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                 {gallery.map((img, i) => (
+                   <div key={i} className="aspect-square rounded-[2rem] overflow-hidden border-[10px] border-white shadow-2xl bg-white">
+                      <img src={img} alt="Cargo" className="w-full h-full object-cover" />
+                   </div>
+                 ))}
+               </div>
             </div>
           </div>
 
-          {/* 4. ITEM LEDGER (REFINED SIZE) */}
+          {/* 4. ITEM LEDGER */}
           <div className="md:col-span-12 bg-white rounded-[3rem] border border-slate-100 p-10 shadow-sm">
             <div className="flex items-center gap-3 text-slate-400 mb-8">
               <Info size={18} />
@@ -267,23 +267,19 @@ export default function TrackingPage() {
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {items.length > 0 ? items.map((item, i) => (
+              {items.map((item, i) => (
                 <div key={i} className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-100 transition-all">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-xs font-black text-white">
-                      {item.quantity || 1}
+                      {item.quantity}
                     </div>
                     <div>
-                      <p className="text-[11px] font-black text-slate-900 uppercase leading-tight">{item.name || 'Unit'}</p>
-                      {item.value_usd && <p className="text-[10px] font-mono text-slate-400 mt-1">${Number(item.value_usd).toLocaleString()}</p>}
+                      <p className="text-[11px] font-black text-slate-900 uppercase leading-tight">{item.name}</p>
+                      <p className="text-[10px] font-mono text-slate-400 mt-1">${Number(item.value_usd).toLocaleString()}</p>
                     </div>
                   </div>
                 </div>
-              )) : (
-                <div className="col-span-full py-8 text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest italic opacity-50">
-                  Item Ledger Not Disclosed
-                </div>
-              )}
+              ))}
             </div>
           </div>
 
