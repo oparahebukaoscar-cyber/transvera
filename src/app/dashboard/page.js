@@ -1,4 +1,16 @@
 "use client"
+/*
+Copilot Prompt Options — paste one of these into Copilot when debugging a Vercel/Next.js build error for this page.
+
+Option 1: The "Analyze and Fix" (Best for most cases)
+I am getting a Vercel build error during static generation: 'Export encountered errors on following paths: /dashboard'. Analyze this file and identify any code that would crash during a server-side build (Node.js environment). Specifically, look for missing environment variables, unhandled 'window' or 'localStorage' references, or issues with dynamic data fetching that might prevent static export. Suggest a fix to make this build-ready.
+
+Option 2: The "Dynamic Guard" (Best if you use Cookies/Auth)
+This page is failing the Next.js build because it's being treated as a static page, but it requires dynamic user data (like cookies or headers). Help me refactor this file to use 'export const dynamic = "force-dynamic"' and ensure all data fetching is wrapped in a try/catch block to prevent the 'npm run build' command from failing.
+
+Option 3: The "Browser API" Fix (Best for window is not defined)
+The Next.js build is crashing because of a 'window is not defined' error or a similar browser-only API being called on the server. Review this component and wrap any browser-specific logic in a useEffect hook or a 'typeof window' check so it doesn't execute during the Vercel build process.
+*/
 
 import React, { useEffect, useState, useRef } from "react"
 import { supabase } from "@/lib/supabaseClient"
