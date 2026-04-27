@@ -1,4 +1,5 @@
 "use client"
+export const dynamic = "force-dynamic"
 /*
 Copilot Prompt Options — paste one of these into Copilot when debugging a Vercel/Next.js build error for this page.
 
