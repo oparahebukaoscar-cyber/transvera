@@ -33,12 +33,9 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSessio
       console.log('Created org', orgId);
     }
 
-    // Ensure a profile (generate a UUID locally)
-    const profileId = randomUUID();
-    const { error: profileErr } = await supabase.from('profiles').upsert({ id: profileId, full_name: 'Dev Seeder', email: 'seeder@example.com', is_super_admin: true, created_at: new Date().toISOString() });
-    if (profileErr) throw profileErr;
-    await supabase.from('organization_members').upsert([{ organization_id: orgId, profile_id: profileId, role: 'owner', status: 'active', joined_at: new Date().toISOString() }]);
-    console.log('Ensured profile and membership');
+    // Skip profile creation to avoid foreign-key constraints on profiles
+    // We only need an organization and to insert the test asset itself.
+    console.log('Skipping profile creation; proceeding to insert asset');
 
     const serial = 'TRN-B8W9-22PX';
     const { data: existingAssets } = await supabase.from('assets').select('id').eq('serial_number', serial).limit(1);
