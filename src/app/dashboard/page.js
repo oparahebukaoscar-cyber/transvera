@@ -16,6 +16,7 @@ The Next.js build is crashing because of a 'window is not defined' error or a si
 import React, { useEffect, useState, useRef } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { motion, AnimatePresence } from "framer-motion"
+const getApiBase = () => (typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_BASE_URL || '');
 import { notifySuccess, notifyError, notifyInfo } from "@/lib/notifier"
 import {
   Menu,
@@ -217,7 +218,7 @@ export default function DashboardPage() {
                     <AnimatePresence>
                       {assets?.map((a) => (
                         <motion.div key={a.id} layoutId={`asset-${a.id}`} className="flex items-center gap-3 p-2 rounded hover:bg-slate-50 cursor-pointer">
-                          <img src={a.image_url || `/api/placeholder.png`} alt="thumb" className="h-10 w-10 rounded object-cover border" />
+                          <img src={a.image_url || `${getApiBase()}/api/placeholder.png`} alt="thumb" className="h-10 w-10 rounded object-cover border" />
                           <div className="flex-1">
                             <div className="flex items-center justify-between">
                               <div className="text-sm font-medium">{a.tracking_id}</div>
@@ -396,7 +397,7 @@ function AssetAction({ assets, onUpdate }) {
       {selected && (
         <div className="p-3 border border-slate-100 rounded bg-slate-50">
           <div className="flex items-center gap-3 mb-2">
-            <img src={selected.image_url || `/api/placeholder.png`} className="h-12 w-12 rounded object-cover" />
+            <img src={selected.image_url || `${getApiBase()}/api/placeholder.png`} className="h-12 w-12 rounded object-cover" />
             <div>
               <div className="font-medium">{selected.tracking_id}</div>
               <div className="text-xs text-slate-500">{selected.product_name}</div>

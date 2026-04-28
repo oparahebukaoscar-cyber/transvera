@@ -1,6 +1,9 @@
 "use client";
+export const dynamic = 'force-dynamic';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+
+const getApiBase = () => (typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_BASE_URL || '');
 
 export default function AdminPage() {
   const [orgs, setOrgs] = useState([]);
@@ -93,7 +96,7 @@ export default function AdminPage() {
     setManageLoading(true);
     setManageMessage(null);
     try {
-      const res = await fetch(`/api/admin/assets?serial=${encodeURIComponent(manageSerial)}`);
+      const res = await fetch(`${getApiBase()}/api/admin/assets?serial=${encodeURIComponent(manageSerial)}`);
       const json = await res.json();
       setManageLoading(false);
       if (!res.ok) return setManageMessage({ type: 'error', text: json.error || 'Failed to load asset' });
@@ -116,7 +119,7 @@ export default function AdminPage() {
       if (manageData.destination !== undefined) updates.destination = manageData.destination;
       if (manageData.image_url !== undefined) updates.image_url = manageData.image_url;
 
-      const res = await fetch('/api/admin/assets', {
+      const res = await fetch(`${getApiBase()}/api/admin/assets`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ serial: manageData.serial_number, updates }),
